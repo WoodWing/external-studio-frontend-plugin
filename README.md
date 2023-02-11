@@ -4,7 +4,7 @@ The project show how a Studio frontend plugin hosted on an external server can s
 # Dev 
 * Initialise project: npm update
 * Run project locally: npm run start
-* Release project: npm run dist 
+* Release project: npm run build 
 
 # Installation
 Assuming the project is running locally configure the following URL in the Studio management console in the Plugins->Studio section

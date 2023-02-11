@@ -7,11 +7,14 @@
   var _dossier;
   var _serverURL;
 
-  window.addEventListener("message", (event)=>{
+  /**
+   * Post message event listener
+   */
+  window.addEventListener("message", (event) => {
     if (event.data.command == postMessageChannel + "-Init") {
-      init (event.data.selection, event.data.dossier, event.data.serverURL);
+      init(event.data.selection, event.data.dossier, event.data.serverURL);
     }
-  }); 
+  });
 
   /**
    * Init function called from loader.js via postmessage
@@ -23,22 +26,11 @@
     _selection = selection;
     _dossier = dossier;
     _serverURL = serverURL;
-    
-    loadStudioStyles ();
+
+    loadStudioStyles();
     document.getElementById("closeButton").onclick = closePanel;
 
     getDossierObject(dossier.ID);
-  }
-
-  /**
-   * Simple counter for demo
-   */
-  function counter() {
-    let seconds = 0;
-    setInterval(() => {
-      seconds += 1;
-      document.getElementById('app').innerHTML = `<p>You have been here for ${seconds} seconds!</p>`;
-    }, 1000);
   }
 
   /**
@@ -49,9 +41,7 @@
     var dossierObject = await getObjects(dossierID);
     console.log(dossierObject);
 
-    document.getElementById('app').innerHTML = "The Dossier name is <b>" + dossierObject.MetaData.BasicMetaData.Name +"</b> to full information is logged in the console <br><br>";// + JSON.stringify(dossierObject); 
-
-
+    document.getElementById('app').innerHTML = "The Dossier name is <b>" + dossierObject.MetaData.BasicMetaData.Name + "</b> to full information is logged in the console <br><br>";
   }
 
   /**
@@ -103,7 +93,10 @@
     return _serverURL + "?protocol=JSON&ww-app=Content+Station&method=" + request.method;
   }
 
-  function closePanel () {
+  /**
+   * Close the modal dialog
+   */
+  function closePanel() {
 
     var message = {
       "command": postMessageChannel + "-ClosePanel",
@@ -112,10 +105,11 @@
     window.parent.postMessage(message, '*');
   }
 
-  function loadStudioStyles () {
-    if(window.top && window.top.location.href != document.location.href) {
-    // I'm small but I'm not alone
-   
+  /**
+   * Import the styles from the parent
+   */
+  function loadStudioStyles() {
+    if (window.top && window.top.location.href != document.location.href) {
       // all parent's <link>s
       var linkrels = window.top.document.getElementsByTagName('link');
       // my head
@@ -124,24 +118,17 @@
       for (var i = 0, max = linkrels.length; i < max; i++) {
         // are they stylesheets
         if (linkrels[i].rel && linkrels[i].rel == 'stylesheet') {
-           // create new element and copy all attributes
+          // create new element and copy all attributes
           var thestyle = document.createElement('link');
           var attrib = linkrels[i].attributes;
           for (var j = 0, attribmax = attrib.length; j < attribmax; j++) {
             thestyle.setAttribute(attrib[j].nodeName, attrib[j].nodeValue);
           }
-  
-           // add the newly created element to the head
+
+          // add the newly created element to the head
           small_head.appendChild(thestyle);
-          console.log (thestyle);
-   
         }
       }
-   
-      // maybe, only maybe, here we should remove the kid's own styles...
-   
-    } else {
-      alert('I hate to tell you that, but you are an orphant :( ');
     }
   }
 })();  
