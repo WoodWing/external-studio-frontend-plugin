@@ -1,20 +1,9 @@
 'use strict';
 
 (function () {
-  const postMessageChannel = "ExternalIntegration";
-
   var _selection;
   var _dossier;
-  var _serverURL;
-
-  /**
-   * Post message event listener
-   */
-  window.addEventListener("message", (event) => {
-    if (event.data.command == postMessageChannel + "-Init") {
-      init(event.data.selection, event.data.dossier, event.data.serverURL);
-    }
-  });
+  var _ContentStationSdk;
 
   /**
    * Init function called from loader.js via postmessage
@@ -22,20 +11,17 @@
    * @param {*} dossier Dossier object
    * @param {*} serverURL URL of the Studio Server 
    */
-  async function init(selection, dossier, serverURL) {
+  async function init(selection, dossier, ContentStationSdk) {
     _selection = selection;
     _dossier = dossier;
-    _serverURL = serverURL;
-
-    loadStudioStyles();
-    document.getElementById("closeButton").onclick = closePanel;
+    _ContentStationSdk = ContentStationSdk;
 
     getDossierObject(dossier.ID);
   }
 
   /**
    * Example communication with the Studio Server
-   * @param {Se} dossierID 
+   * @param {dossierID} dossierID 
    */
   async function getDossierObject(dossierID) {
     var dossierObject = await getObjects(dossierID);
@@ -43,6 +29,7 @@
 
     document.getElementById('app').innerHTML = "The Dossier name is <b>" + dossierObject.MetaData.BasicMetaData.Name + "</b> to full information is logged in the console <br><br>";
   }
+
 
   /**
    * GetObjects request
@@ -89,46 +76,18 @@
   * Returns the URL of the Studio Server
   * @param {} request Studio server JSON RPC request
   */
-  function getServerURL(request) {
-    return _serverURL + "?protocol=JSON&ww-app=Content+Station&method=" + request.method;
+  function getServerURL(request) {    
+    return _ContentStationSdk.getInfo().ServerInfo.URL + "?protocol=JSON&ww-app=Content+Station&method=" + request.method;
   }
 
   /**
-   * Close the modal dialog
-   */
-  function closePanel() {
-
-    var message = {
-      "command": postMessageChannel + "-ClosePanel",
-    }
-
-    window.parent.postMessage(message, '*');
+ * Check if we can close the modal dialog
+ */
+  function canClose() {
+    return true;
   }
 
-  /**
-   * Import the styles from the parent
-   */
-  function loadStudioStyles() {
-    if (window.top && window.top.location.href != document.location.href) {
-      // all parent's <link>s
-      var linkrels = window.top.document.getElementsByTagName('link');
-      // my head
-      var small_head = document.getElementsByTagName('head').item(0);
-      // loop through parent's links
-      for (var i = 0, max = linkrels.length; i < max; i++) {
-        // are they stylesheets
-        if (linkrels[i].rel && linkrels[i].rel == 'stylesheet') {
-          // create new element and copy all attributes
-          var thestyle = document.createElement('link');
-          var attrib = linkrels[i].attributes;
-          for (var j = 0, attribmax = attrib.length; j < attribmax; j++) {
-            thestyle.setAttribute(attrib[j].nodeName, attrib[j].nodeValue);
-          }
+  window.canClose = canClose;
+  window.init = init;  
+})();
 
-          // add the newly created element to the head
-          small_head.appendChild(thestyle);
-        }
-      }
-    }
-  }
-})();  

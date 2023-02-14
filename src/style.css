@@ -1,0 +1,17 @@
+.text {
+    color: var(--theme-text);
+    font-weight: var(--theme-font-weight);
+    font-family: AvenirNext,sans-serif;
+    box-sizing: inherit;
+    word-wrap: break-word;
+    font-size: 14px;
+    max-height: calc(100vh - 80px);
+    max-width: calc(100vw - 40px);
+    overflow: visible;
+    
+    position: relative;
+}
+
+body {
+    margin: 20px;
+}

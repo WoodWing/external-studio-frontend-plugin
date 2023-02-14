@@ -1,8 +1,6 @@
 (function () {
   const integrationUrl = "http://localhost:8080/";
   const iFrameId = "ExternalIntegration";
-  const postMessageChannel = "ExternalIntegration";
-  var dialogId;
 
   ContentStationSdk.addDossierToolbarButton({
     onInit: function (button, selection) {
@@ -13,43 +11,46 @@
        * Initialise the external plugin
        */
       function init() {
-        var message = {
-          "command": postMessageChannel + "-Init",
-          "selection": selection,
-          "dossier": dossier,
-          "serverURL": ContentStationSdk.getInfo().ServerInfo.URL
-        }
-
-        document.getElementById(iFrameId).contentWindow.postMessage(message, '*');
+        getIframeWindow().init (selection, dossier, ContentStationSdk);
       }
-
-      /**
-       * Listen for events from the external integration
-       */
-      window.addEventListener('message', function (event) {
-        if (event.data.command == postMessageChannel + "-ClosePanel") {
-          console.log ("Close " + dialogId);
-          ContentStationSdk.closeModalDialog(dialogId);
-        }  
-      });
 
       //Create the modal dialog
       dialogId = ContentStationSdk.openModalDialog({
         width: 480,
-        content: `<iframe id=${iFrameId} src="" frameborder="0" style="margin: 0; padding: 0; height: 500px; width: 100%"></iframe>`,
+        title: 'External Studio Frontend plugin',
+        content: `<iframe id=${iFrameId} frameborder="0" style="margin: 0; padding: 0; width: 100%"></iframe>`,
         contentNoPadding: true,
+        buttons: [
+          {
+            label: 'Close',
+            callback: () => {
+              if (getIframeWindow().canClose ()) 
+                ContentStationSdk.closeModalDialog(dialogId);
+            },
+          },
+        ],
       });
 
       //Download the main html file of the integration and replace the relative URLS
       fetch(integrationUrl)
         .then(response => response.text())
         .then(data => {
-          html = absolutify(data, integrationUrl);
-          document.getElementById(iFrameId).onload = init;
-          document.getElementById(iFrameId).srcdoc = html;
+          var html = absolutify(data, integrationUrl);
+          var iFrame = document.getElementById(iFrameId);
+          iFrame.onload = init;
+          iFrame.srcdoc = html;                  
         });
     }
   });
+
+  /**
+   * Returns the contentWindow of the iFrame
+   * 
+   * @returns contentWindow
+   */
+  function getIframeWindow () {
+    return document.getElementById(iFrameId).contentWindow;
+  }
 
   /**
    * Convert relative paths to absolute paths
