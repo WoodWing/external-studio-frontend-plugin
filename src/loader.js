@@ -60,30 +60,30 @@
    * @param  {string[]} [attributes] - attributes to convert
    * @returns {string}
    */
-  function absolutify(
+   function absolutify (
     html,
     baseUrl,
     attributes = [
-      "href",
-      "src",
-      "srcset",
-      "cite",
-      "background",
-      "action",
-      "formaction",
-      "icon",
-      "manifest",
-      "code",
-      "codebase",
-      "ws"
-    ]
+      'href',
+      'src',
+      'srcset',
+      'cite',
+      'background',
+      'action',
+      'formaction',
+      'icon',
+      'manifest',
+      'code',
+      'codebase',
+      'ws',
+    ],
   ) {
     // Build the regex to match the attributes.
     const regExp = new RegExp(
       `(?<attribute>${attributes.join(
-        "|"
+        '|',
       )})=(?<quote>['"])(?<path>.*?)\\k<quote>`,
-      "gi"
+      'gi',
     );
 
     return html.replaceAll(regExp, (...args) => {
@@ -91,17 +91,22 @@
       const { attribute, quote, path } = args[args.length - 1];
 
       // srcset may have multiple paths `<url> <descriptor>, <url> <descriptor>`
-      if (attribute.toLowerCase() === "srcset") {
-        const srcSetParts = path.split(",").map((dirtyPart) => {
+      if (attribute.toLowerCase() === 'srcset') {
+        const srcSetParts = path.split(',').map((dirtyPart) => {
           const part = dirtyPart.trim();
-          const [path, size] = part.split(" ");
-          return `${new URL(path.trim(), baseUrl).toString()} ${size || ""}`;
+          const [path, size] = part.split(' ');
+
+          const absoluteURL = baseUrl + path.trim();
+          absoluteURL.replace('\\\\', '\\'); // Replace double slashes
+
+          return `${absoluteURL} ${size || ''}`;
         });
 
-        return `${attribute}=${quote}${srcSetParts.join(", ")}${quote}`;
+        return `${attribute}=${quote}${srcSetParts.join(', ')}${quote}`;
       }
 
-      const absoluteURL = new URL(path, baseUrl).href;
+      const absoluteURL = baseUrl + path;
+      absoluteURL.replace('\\\\', '\\'); // Replace double slashes
       return `${attribute}=${quote}${absoluteURL}${quote}`;
     });
   }
