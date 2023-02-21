@@ -14,3 +14,5 @@ http://localhost:8080/loader.js
 Please update the integrationUrl in loader.js if the integration is hosted somewhere else  
 
 The loader will add a button / link to the Dossier interface called "External integration" to open the projects modal dialog
+
+Alternatively the plugin is also deployed via GitHub actions to GitHub pages, this is very illustration purposes only. Please distribute to a location like AWS or Azure for production purposes. 
