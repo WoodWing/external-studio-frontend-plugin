@@ -15,4 +15,7 @@ Please update the integrationUrl in loader.js if the integration is hosted somew
 
 The loader will add a button / link to the Dossier interface called "External integration" to open the projects modal dialog
 
-Alternatively the plugin is also deployed via GitHub actions to GitHub pages, this is very illustration purposes only. Please distribute to a location like AWS or Azure for production purposes. 
+# Deployment
+This sample is deployed via GitHub actions to GitHub pages, this is for illustration purposes. For production purposes deploy to a location like AWS or Azure. 
+
+https://woodwing.github.io/external-studio-frontend-plugin/loader.js
