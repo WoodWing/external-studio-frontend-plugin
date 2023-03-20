@@ -19,3 +19,8 @@ The loader will add a button / link to the Dossier interface called "External in
 This sample is deployed via GitHub actions to GitHub pages, this is for illustration purposes. For production purposes deploy to a location like AWS or Azure. 
 
 https://woodwing.github.io/external-studio-frontend-plugin/loader.js
+
+In the case of Same Origin Policy errors please verify the Access-Control-Allow-Origin and Access-Control-Allow-Method settings on the service hosting the loader.js. The Access-Control-Allow-Origin should be set to the domain of the Studio webclient or be set to *.  
+
+
+
