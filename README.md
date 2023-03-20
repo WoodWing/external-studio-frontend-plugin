@@ -20,7 +20,10 @@ This sample is deployed via GitHub actions to GitHub pages, this is for illustra
 
 https://woodwing.github.io/external-studio-frontend-plugin/loader.js
 
-In the case of Same Origin Policy errors please verify the Access-Control-Allow-Origin and Access-Control-Allow-Method settings on the service hosting the loader.js. The Access-Control-Allow-Origin should be set to the domain of the Studio webclient or be set to *.  
+In the case of Same Origin Policy errors please verify the Access-Control-Allow-Origin and Access-Control-Allow-Method settings on the service hosting the loader.js. 
+
+* The Access-Control-Allow-Origin should be set to the domain of the Studio webclient or be set to * 
+* The Access-Control-Allow-Methods should be set to "GET,POST,OPTIONS,DELETE,PUT"
 
 
 
